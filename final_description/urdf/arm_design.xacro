@@ -1,0 +1,432 @@
+<?xml version="1.0"?>
+
+
+<robot name="robotic_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<material name="Yellow">
+        <color rgba="1.0 1.0 0.0 1.0"/>
+    </material>
+
+    <material name="Black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+
+<material name="White">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+ <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+    </material>
+
+
+<!-- Shoulder yaw link properties -->
+  <property name="shoulder_yaw_len" value="0.195" />
+
+  <!-- Elbow roll link properties -->
+  <property name="elbow_roll_len" value="0.16" />
+
+  <property name="deg_to_rad" value="0.01745329251994329577"/>
+
+  <!-- Constants -->
+  <property name="M_SCALE" value="0.001 0.001 0.001"/> 
+  <property name="M_PI" value="3.14159"/>
+
+<xacro:macro name="transmission_block" params="joint_name">
+	  <transmission name="tran1">
+	    <type>transmission_interface/SimpleTransmission</type>
+	    <joint name="${joint_name}">
+	      <hardwareInterface>PositionJointInterface</hardwareInterface>
+	    </joint>
+	    <actuator name="motor1">
+	      <hardwareInterface>PositionJointInterface</hardwareInterface>
+	      <mechanicalReduction>1</mechanicalReduction>
+	    </actuator>
+	  </transmission>
+   </xacro:macro>
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+  <!-- BOTTOM LINK -->
+  <link name="bottom_link">
+
+	    <visual>
+	      <origin xyz="0 0 0.0125" rpy="0 0 0" /> 
+	      <geometry>
+
+		       <box size="0.16 0.16 0.025" />   <!-- 0.15 0.15 0.1 -->
+
+	      </geometry>
+	     <material name="Black" />
+	    </visual>
+
+	    <collision>
+	      <origin xyz="0 0 0.0125" rpy="0 0 0" /> 
+	      <geometry>
+
+		       <box size="0.16 0.16 0.025" />
+		
+	      </geometry>
+	      </collision>>
+  </link>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="bottom_joint" type="fixed">
+	    <parent link="bottom_link"/>
+	    <child link="base_link"/>
+	    <origin xyz="0 0 0.105" rpy="0 0 0" />
+  </joint>
+
+<!-- BASE LINK -->
+<link name="base_link">
+
+	    <visual>
+	      <origin xyz="0 0 0" rpy="0 0 0" /> 
+	      <geometry>
+
+		       <box size="0.1 0.1 0.16" />   
+
+	      </geometry>
+	     <material name="White" />
+	    </visual>
+
+	    <collision>
+	      <origin xyz="0 0 0" rpy="0 0 0" /> 
+	      <geometry>
+
+		       <box size="0.1 0.1 0.16" />
+		
+	      </geometry>
+	      </collision>>
+  </link>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<joint name="shoulder_pan_joint" type="revolute">
+	    <parent link="base_link"/>
+	    <child link="shoulder_pan_link"/>
+	    <origin xyz="0 0 0.08" rpy="0 0 0" />
+	    <axis xyz="0 0 1" />
+	    <limit effort="300" velocity="1" lower="-1.57" upper="1.57"/>
+  </joint>
+
+<!-- SHOULDER PAN LINK -->
+  <link name="shoulder_pan_link" >
+	    <visual>
+	      <origin xyz="0 -0.02 0.025" rpy="0 0 0" />
+	      <geometry>
+		    <box size="0.038 0.08 0.05"/>
+	      </geometry>
+	     <material name="White" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 -0.02 0.025" rpy="0 0 0" />
+	      <geometry>
+		    <box size="0.038 0.08 0.05"/>
+	      </geometry>
+	    </collision>
+        
+  </link>
+ 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<joint name="shoulder_pitch_joint" type="revolute">
+	    <parent link="shoulder_pan_link"/>
+	    <child link="shoulder_pitch_link"/>
+	    <origin xyz="0 0 0.05" rpy="0 0 0" />
+	    <axis xyz="0 1 0" />
+	    <limit effort="300" velocity="1" lower="-1.57" upper="1.57" />
+  </joint>
+
+  <!-- SHOULDER PITCH LINK -->
+  <link name="shoulder_pitch_link" >
+
+	    <visual>
+	      <origin xyz="0 0 0" rpy="0 0 0" />
+	      <geometry>
+		    <box size="0 0 0"/>
+	      </geometry>
+	     <material name="White" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 0 0" rpy="0 0 0" />
+	      <geometry>
+		    <box size="0 0 0"/>
+	      </geometry>
+	    </collision>
+         
+  </link>
+
+ 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<joint name="shoulder_yaw_joint" type="fixed">
+	    <parent link="shoulder_pitch_link"/>
+	    <child link="shoulder_yaw_link"/>
+	    <origin xyz="0 0 0" rpy="0 0 0" />
+	    <axis xyz="1 0 0" />
+  </joint>
+
+  <!-- SHOULDER YAW LINK -->
+  <link name="shoulder_yaw_link" >
+
+	    <visual>
+	      <origin xyz="0 0 ${shoulder_yaw_len/2}" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.02" length="${shoulder_yaw_len}"/>
+	      </geometry>
+	     <material name="White" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 0 ${shoulder_yaw_len/2}" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.02" length="${shoulder_yaw_len}"/>
+	      </geometry>
+	    </collision>
+        
+  </link>
+
+ 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="elbow_pitch_joint" type="revolute">
+	    <parent link="shoulder_yaw_link"/>
+	    <child link="elbow_pitch_link"/>
+	    <origin xyz="0 0 ${shoulder_yaw_len}" rpy="0 0 0" />
+	    <axis xyz="1 0 0" />
+	    <limit effort="300" velocity="1" lower="-1.57" upper="1.57" />
+  </joint>
+
+  <!-- ELBOW PITCH LINK -->
+  <link name="elbow_pitch_link" >
+
+	    <visual>
+	      <origin xyz="0 0 0" rpy="0 0 0" />
+	      <geometry>
+		    <sphere radius="0.02"/>
+	      </geometry>
+	     <material name="White" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 0 0" rpy="0 0 0" />
+	      <geometry>
+		    <sphere radius="0.02"/>
+	      </geometry>
+	    </collision>
+        
+  </link>
+
+ 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="elbow_roll_joint" type="fixed">
+	    <parent link="elbow_pitch_link"/>
+	    <child link="elbow_roll_link"/>
+	    <origin xyz="0 0 0" rpy="0 0 0" />
+	    <axis xyz="0 0 1" />
+	    <dynamics damping="50" friction="1"/>
+  </joint>
+
+  <!-- ELBOW ROLL LINK -->
+  <link name="elbow_roll_link" >
+
+	    <visual>
+	      <origin xyz="0 0 ${elbow_roll_len/2}" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.02" length="${elbow_roll_len}"/>
+	      </geometry>
+	    <material name="White" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 0 ${elbow_roll_len/2}" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.02" length="${elbow_roll_len}"/>
+	      </geometry>
+	    </collision>
+         
+  </link>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="wrist_pitch_joint" type="revolute">
+	    <parent link="elbow_roll_link"/>
+	    <child link="wrist_pitch_link"/>
+	    <origin xyz="0 0 ${elbow_roll_len}" rpy="0 0 0" />
+	    <axis xyz="0 1 0" />
+	    <limit effort="300" velocity="1" lower="-1.57" upper="1.57" />
+	    <dynamics damping="50" friction="1"/>
+  </joint>
+
+  <!-- WRIST PITCH LINK -->
+  <link name="wrist_pitch_link" >
+
+	    <visual>
+	      <origin xyz="0 0 0.1" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.02" length="0.2"/>
+	      </geometry>
+	     <material name="White" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 0 0.1" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.02" length="0.2"/>
+	      </geometry>
+	    </collision>
+         
+  </link>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="wrist_joint" type="continuous">
+	    <parent link="wrist_pitch_link"/>
+	    <child link="wrist_link"/>
+	    <origin xyz="0 0 0.01" rpy="0 0 0" />
+	    <axis xyz="0 0 1" />
+  </joint>
+
+  <!-- WRIST LINK -->
+  <link name="wrist_link" >
+
+	    <visual>
+	      <origin xyz="0 0 0.2" rpy="0 0 0" />
+	      <geometry>
+		    <box size="0.03 0.04 0.02"/>
+	      </geometry>
+	    <material name="White" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 0 0.2" rpy="0 0 0" />
+	      <geometry>
+		    <box size="0.03 0.04 0.02"/>
+	      </geometry>
+	    </collision>
+        
+  </link>
+
+ 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="grabber_joint" type="fixed">
+	    <parent link="wrist_link"/>
+	    <child link="grabber_link"/>
+	    <origin xyz="0 0 0.21" rpy="0 0 0" />
+  </joint>
+
+  <!-- GRABBER LINK -->
+  <link name="grabber_link" >
+
+	    <visual>
+	      <origin xyz="0 0 0.005" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.05" length="0.01"/>
+	      </geometry>
+	     <material name="Yellow" />
+	    </visual>
+	    <collision>
+	      <origin xyz="0 0 0.005" rpy="0 0 0" />
+	      <geometry>
+		    <cylinder radius="0.05" length="0.01"/>
+	      </geometry>
+	    </collision>
+         
+  </link>
+
+ 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="finger_joint1" type="revolute">
+    <parent link="grabber_link"/>
+    <child link="finger_link1"/>
+    <origin xyz="0.0 0 0.01" />
+    <axis xyz="1 0 0" />
+    <limit effort="300" velocity="1" lower="-0.30" upper="0.20" />
+  </joint>
+
+<!-- FINGER LINK 1-->
+  <link name="finger_link1">
+
+     <visual>
+      <origin xyz="0 -0.03 0.08"/>
+      <geometry>
+
+           <box size="0.01 0.01 0.175" />
+
+      </geometry>
+     <material name="Yellow" />
+    </visual>
+         
+  </link>
+
+ 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<joint name="finger_joint2" type="fixed">
+    <parent link="grabber_link"/>
+    <child link="finger_link2"/>
+    <origin xyz="0.0 0 0.01" />
+<!--    <axis xyz="0 1 0" />
+     <limit effort="100" lower="-0.03" upper="0" velocity="1.0"/>-->
+  </joint>
+
+<!-- FINGER LINK 2-->
+  <link name="finger_link2">
+
+     <visual>
+      <origin xyz="0 0.03 0.08"/>
+      <geometry>
+
+           <box size="0.01 0.01 0.175" />
+
+      </geometry>
+     <material name="Yellow" />
+    </visual>
+        
+  </link>
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<joint name="grasping_frame_joint" type="fixed">
+      <parent link="grabber_link"/>
+      <child link="grasping_frame"/>
+      <origin xyz="0 0 0.18" rpy="0 0 0"/>
+    </joint>
+
+<!-- Grasping frame -->
+    <link name="grasping_frame">
+   <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+
+          <box size="0.01 0.01 0.01" />
+
+
+      </geometry>
+      <material name="Blue" />
+    </visual>
+    </link>
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+<!-- Transmissions for ROS Control -->
+<xacro:transmission_block joint_name="shoulder_pan_joint"/>
+<xacro:transmission_block joint_name="shoulder_pitch_joint"/>
+<xacro:transmission_block joint_name="elbow_pitch_joint"/>
+<xacro:transmission_block joint_name="wrist_pitch_joint"/>
+<xacro:transmission_block joint_name="wrist_joint"/>
+<xacro:transmission_block joint_name="finger_joint1"/>
+
+
+
+</robot>
+

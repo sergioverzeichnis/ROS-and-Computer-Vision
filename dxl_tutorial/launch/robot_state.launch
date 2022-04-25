@@ -1,0 +1,9 @@
+<launch>
+
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find final_description)/urdf/arm_design.xacro'" />
+
+  <node name="State_Publisher" pkg="dxl_tutorial" type="state_publisher.py" /> 
+
+  <node pkg="tf" type="static_transform_publisher" name="map_base_tf" args="0 0 0 0 0 0 /map /bottom_link 50" />
+
+</launch>
