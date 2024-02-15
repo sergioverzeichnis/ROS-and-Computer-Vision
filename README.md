@@ -1,4 +1,4 @@
-# Robot and Computer Vision, ROS
+# ROS and Computer Vision 
  
 Repository of my Bachelor thesis, carried out in Frankfurt University of Applied Science on the robot ROSWITHA.
 
