@@ -1,6 +1,6 @@
 # ROS and Computer Vision 
  
-Repository of my Bachelor thesis, carried out in Frankfurt University of Applied Science on the robot ROSWITHA.
+Repository of my Bachelor thesis, carried out in the Frankfurt University of Applied Science, using the ROSWITHA robot.
 
 ## Topics
 
