@@ -2,7 +2,7 @@
  
 Repository of my Bachelor thesis, carried out on the ROSWITHA robot from the Frankfurt University of Applied Science.
 
-It was named "Implementation of tasks on assistant robot for people with reduce mobility using ROS and guided by Computer Vision".
+It was named as "Implementation of tasks on assistant robot for people with reduce mobility using ROS and guided by Computer Vision".
 
 ## Topics
 
