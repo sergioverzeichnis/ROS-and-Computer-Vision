@@ -1,7 +1,8 @@
 # ROS and Computer Vision 
  
-Repository of my Bachelor thesis, carried out in the Frankfurt University of Applied Science.
-It was performed on the ROSWITHA robot with the name "Implementation of tasks on assistant robot for people with reduce mobility using ROS and guided by Computer Vision".
+Repository of my Bachelor thesis, carried out on the ROSWITHA robot from the Frankfurt University of Applied Science.
+
+It was named "Implementation of tasks on assistant robot for people with reduce mobility using ROS and guided by Computer Vision".
 
 ## Topics
 
